@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zentraq — Datenverarbeitung</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+```
+:root {
+  --navy:   #0b1f3a;
+  --navy-2: #112849;
+  --accent: #3a80d2;
+  --white:  #ffffff;
+  --light:  #d6e4f7;
+  --dim:    #7a9ec0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.6rem 6rem;
+  background: rgba(11,31,58,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(58,128,210,0.15);
+}
+.logo {
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--white); text-decoration: none;
+}
+.logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 3rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 1rem; color: var(--dim); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-btn {
+  padding: 0.7rem 1.8rem; background: var(--accent);
+  color: var(--white) !important; border-radius: 6px; font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s !important;
+}
+.nav-btn:hover { background: #5095e0 !important; }
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* MOBILE MENU */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11,31,58,0.98);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 1.5rem; color: var(--white); text-decoration: none; font-weight: 500;
+}
+.mobile-menu .nav-btn {
+  font-size: 1.2rem; padding: 1rem 2.5rem;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 9rem 6rem 6rem;
+}
+.hero-inner { max-width: 820px; }
+.hero-tag {
+  display: inline-block; padding: 0.45rem 1.2rem;
+  background: rgba(58,128,210,0.12); border: 1px solid rgba(58,128,210,0.3);
+  border-radius: 20px; font-size: 1rem; color: var(--accent); margin-bottom: 2.5rem;
+}
+h1 {
+  font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 700;
+  line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 2rem;
+}
+h1 span { color: var(--accent); }
+.hero-desc {
+  font-size: 1.2rem; color: var(--light);
+  max-width: 600px; margin-bottom: 3rem; line-height: 1.8;
+}
+.hero-btns { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+.btn {
+  padding: 1rem 2.5rem; border-radius: 8px; font-size: 1rem;
+  font-weight: 500; text-decoration: none; transition: all 0.2s; font-family: inherit;
+}
+.btn-primary { background: var(--accent); color: var(--white); }
+.btn-primary:hover { background: #5095e0; }
+.btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--light); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--white); }
+
+/* NUMBERS */
+.numbers {
+  background: var(--navy-2);
+  border-top: 1px solid rgba(58,128,210,0.12);
+  border-bottom: 1px solid rgba(58,128,210,0.12);
+  padding: 4rem 6rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.number-item {
+  padding: 0 3rem; border-right: 1px solid rgba(58,128,210,0.12);
+}
+.number-item:first-child { padding-left: 0; }
+.number-item:last-child { border-right: none; }
+.number-val { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; }
+.number-val span { color: var(--accent); font-size: 2rem; }
+.number-label { font-size: 1rem; color: var(--dim); margin-top: 0.4rem; }
+
+/* SECTION */
+.section { padding: 8rem 6rem; }
+.section-tag {
+  font-size: 0.9rem; font-weight: 600; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem;
+}
+h2 {
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.2rem;
+}
+.section-sub { font-size: 1.05rem; color: var(--light); max-width: 560px; line-height: 1.8; }
+
+/* CARDS */
+.services-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 3.5rem; gap: 4rem;
+}
+.cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+}
+.card {
+  background: var(--navy-2); border: 1px solid rgba(58,128,210,0.12);
+  border-radius: 12px; padding: 2.5rem; transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover { border-color: rgba(58,128,210,0.35); transform: translateY(-4px); }
+.card-icon {
+  width: 52px; height: 52px; border-radius: 10px;
+  background: rgba(58,128,210,0.1);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;
+}
+.card-icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.7rem; }
+.card p { font-size: 0.95rem; color: var(--dim); line-height: 1.75; }
+
+/* PROCESS */
+.process-bg {
+  background: var(--navy-2);
+  border-top: 1px solid rgba(58,128,210,0.12);
+  border-bottom: 1px solid rgba(58,128,210,0.12);
+}
+.steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 3rem; margin-top: 3.5rem;
+}
+.step-num { font-size: 2.5rem; font-weight: 700; color: rgba(58,128,210,0.3); margin-bottom: 0.8rem; }
+.step h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem; }
+.step p { font-size: 0.95rem; color: var(--dim); line-height: 1.75; }
+
+/* WHY */
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+.why-list { list-style: none; margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.4rem; }
+.why-list li {
+  display: flex; gap: 1rem; align-items: flex-start;
+  font-size: 1rem; line-height: 1.7; color: var(--light);
+}
+.why-check {
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
+  background: rgba(58,128,210,0.12); border: 1px solid rgba(58,128,210,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-size: 0.7rem; margin-top: 2px;
+}
+.why-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.why-box {
+  background: var(--navy-2); border: 1px solid rgba(58,128,210,0.12);
+  border-radius: 12px; padding: 2rem;
+}
+.why-box-num { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
+.why-box-num span { color: var(--accent); font-size: 1.4rem; }
+.why-box-label { font-size: 0.9rem; color: var(--dim); margin-top: 0.4rem; }
+
+/* CTA */
+.cta { text-align: center; background: var(--navy-2); border-top: 1px solid rgba(58,128,210,0.12); }
+.cta .section-sub { margin: 0 auto 3rem; }
+.cta-btns { display: flex; gap: 1.2rem; justify-content: center; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid rgba(58,128,210,0.1); padding: 3rem 6rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-logo { font-size: 1.3rem; font-weight: 700; color: rgba(255,255,255,0.2); }
+.footer-logo span { color: rgba(58,128,210,0.4); }
+.footer-links { display: flex; gap: 2.5rem; list-style: none; }
+.footer-links a { font-size: 0.9rem; color: var(--dim); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 0.88rem; color: var(--dim); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ===================== */
+/* MOBILE: Hochformat     */
+/* ===================== */
+@media (max-width: 768px) {
+  nav {
+    padding: 1.2rem 1.5rem;
+  }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  .hero {
+    padding: 7rem 1.5rem 4rem;
+    min-height: 100svh;
+  }
+  .hero-inner { max-width: 100%; }
+  .hero-tag { font-size: 0.85rem; margin-bottom: 1.5rem; }
+  h1 { font-size: 2.6rem; margin-bottom: 1.2rem; }
+  .hero-desc { font-size: 1rem; margin-bottom: 2rem; }
+  .hero-btns { flex-direction: column; gap: 0.8rem; }
+  .btn { text-align: center; padding: 0.9rem 1.5rem; width: 100%; }
+
+  .numbers {
+    padding: 2.5rem 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .number-item {
+    padding: 1.2rem;
+    border-right: 1px solid rgba(58,128,210,0.12);
+    border-bottom: 1px solid rgba(58,128,210,0.12);
+  }
+  .number-item:nth-child(2n) { border-right: none; }
+  .number-item:nth-child(3),
+  .number-item:nth-child(4) { border-bottom: none; }
+  .number-val { font-size: 2rem; }
+  .number-val span { font-size: 1.3rem; }
+  .number-label { font-size: 0.85rem; }
+
+  .section { padding: 4rem 1.5rem; }
+  h2 { font-size: 1.9rem; }
+  .section-sub { font-size: 0.95rem; }
+
+  .services-head {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+  }
+  .cards { grid-template-columns: 1fr; gap: 1rem; }
+  .card { padding: 1.8rem; }
+
+  .steps { grid-template-columns: 1fr; gap: 2rem; }
+
+  .why-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .why-visual { grid-template-columns: 1fr 1fr; }
+  .why-box { padding: 1.2rem; }
+  .why-box-num { font-size: 1.7rem; }
+
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns .btn { width: 100%; max-width: 320px; text-align: center; }
+
+  footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+  .footer-links { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+}
+
+/* ===================== */
+/* MOBILE: Querformat     */
+/* ===================== */
+@media (max-width: 900px) and (orientation: landscape) {
+  nav { padding: 0.9rem 2rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  .hero {
+    padding: 5rem 3rem 3rem;
+    min-height: auto;
+  }
+  h1 { font-size: 2.2rem; }
+  .hero-desc { font-size: 0.95rem; margin-bottom: 1.5rem; }
+  .hero-btns { flex-direction: row; }
+  .btn { width: auto; }
+
+  .numbers {
+    padding: 2rem 3rem;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .number-item { padding: 0 1.5rem; border-bottom: none; }
+  .number-item:nth-child(2n) { border-right: 1px solid rgba(58,128,210,0.12); }
+  .number-item:last-child { border-right: none; }
+  .number-val { font-size: 2rem; }
+
+  .section { padding: 3.5rem 3rem; }
+  h2 { font-size: 2rem; }
+
+  .services-head { flex-direction: row; align-items: flex-end; margin-bottom: 2rem; }
+  .cards { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .card { padding: 1.5rem; }
+
+  .steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+
+  .why-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+
+  .cta-btns { flex-direction: row; }
+  .cta-btns .btn { width: auto; }
+
+  footer {
+    flex-direction: row;
+    padding: 2rem 3rem;
+  }
+}
+
+/* TABLET */
+@media (min-width: 769px) and (max-width: 1024px) {
+  nav { padding: 1.4rem 3rem; }
+  .hero { padding: 8rem 3rem 5rem; }
+  .numbers { padding: 3rem; grid-template-columns: repeat(4, 1fr); }
+  .number-item { padding: 0 1.5rem; }
+  .section { padding: 6rem 3rem; }
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .why-grid { gap: 3rem; }
+  footer { padding: 2.5rem 3rem; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="logo">Zen<span>traq</span></a>
+    <ul class="nav-links">
+      <li><a href="#leistungen">Leistungen</a></li>
+      <li><a href="#prozess">Prozess</a></li>
+      <li><a href="#vorteile">Vorteile</a></li>
+      <li><a href="#kontakt" class="nav-btn">Kontakt</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#leistungen" onclick="closeMenu()">Leistungen</a>
+    <a href="#prozess" onclick="closeMenu()">Prozess</a>
+    <a href="#vorteile" onclick="closeMenu()">Vorteile</a>
+    <a href="#kontakt" class="nav-btn" onclick="closeMenu()">Kontakt</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="hero-tag">Intelligente Datenverarbeitung</span>
+      <h1>Ihre Daten.<br/>Klar strukturiert.<br/><span>Direkt nutzbar.</span></h1>
+      <p class="hero-desc">
+        Zentraq verarbeitet Ihre Unternehmensdaten schnell, sicher und zuverlässig — damit Sie bessere Entscheidungen treffen können.
+      </p>
+      <div class="hero-btns">
+        <a href="#leistungen" class="btn btn-primary">Unsere Leistungen</a>
+        <a href="#kontakt" class="btn btn-secondary">Beratung anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="numbers reveal">
+    <div class="number-item">
+      <div class="number-val">250<span>+</span></div>
+      <div class="number-label">Kunden europaweit</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">99.9<span>%</span></div>
+      <div class="number-label">Systemverfügbarkeit</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">10<span>+</span></div>
+      <div class="number-label">Jahre Erfahrung</div>
+    </div>
+    <div class="number-item">
+      <div class="number-val">DSGVO</div>
+      <div class="number-label">Vollständig konform</div>
+    </div>
+  </div>
+
+  <section class="section reveal" id="leistungen">
+    <div class="services-head">
+      <div>
+        <p class="section-tag">Leistungen</p>
+        <h2>Was wir für Sie tun.</h2>
+      </div>
+      <p class="section-sub">Von der Datenerfassung bis zur fertigen Auswertung — alles aus einer Hand.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>Echtzeit-Verarbeitung</h3>
+        <p>Ihre Daten werden sofort verarbeitet und stehen direkt für Analysen zur Verfügung.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+        <h3>Datenspeicherung</h3>
+        <p>Sichere, strukturierte Speicherung großer Datenmengen — schnell abrufbar, jederzeit verfügbar.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h3>Auswertung & Berichte</h3>
+        <p>Übersichtliche Dashboards, die Ihre wichtigsten Kennzahlen klar und verständlich darstellen.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Datenschutz & Sicherheit</h3>
+        <p>Alle Prozesse sind DSGVO-konform. Ihre Daten bleiben sicher und unter Ihrer Kontrolle.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Systemanbindung</h3>
+        <p>Einfache Anbindung an bestehende Software — ob ERP, CRM oder individuelle Lösungen.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+        <h3>Automatisierung</h3>
+        <p>Wiederkehrende Datenprozesse laufen automatisch — spart Zeit und reduziert Fehler.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section process-bg reveal" id="prozess">
+    <p class="section-tag">So funktioniert es</p>
+    <h2>In 4 Schritten zu klaren Daten.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Daten erfassen</h3>
+        <p>Wir verbinden uns mit Ihren Datenquellen — Datenbanken, Dateien oder externe Systeme.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Bereinigen</h3>
+        <p>Doppelte oder fehlerhafte Einträge werden automatisch erkannt und korrigiert.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Auswerten</h3>
+        <p>Aus den sauberen Daten entstehen klare Analysen und verständliche Berichte.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Bereitstellen</h3>
+        <p>Die Ergebnisse landen in Ihrem Dashboard oder werden direkt in Ihre Systeme übertragen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" id="vorteile">
+    <div class="why-grid">
+      <div>
+        <p class="section-tag">Warum Zentraq</p>
+        <h2>Verlässlich. Persönlich. Skalierbar.</h2>
+        <ul class="why-list">
+          <li><div class="why-check">✓</div><span>Schnelle Einrichtung — in der Regel innerhalb weniger Wochen einsatzbereit.</span></li>
+          <li><div class="why-check">✓</div><span>Persönlicher Ansprechpartner für Ihr Projekt — kein anonymes Ticketsystem.</span></li>
+          <li><div class="why-check">✓</div><span>Wächst mit Ihnen — geeignet für kleine Unternehmen bis hin zu großen Konzernen.</span></li>
+          <li><div class="why-check">✓</div><span>Transparente Kosten ohne versteckte Gebühren oder lange Vertragslaufzeiten.</span></li>
+          <li><div class="why-check">✓</div><span>Hosting wahlweise in Deutschland oder direkt bei Ihnen vor Ort.</span></li>
+        </ul>
+      </div>
+      <div class="why-visual">
+        <div class="why-box">
+          <div class="why-box-num">250<span>+</span></div>
+          <div class="why-box-label">Zufriedene Kunden</div>
+        </div>
+        <div class="why-box">
+          <div class="why-box-num">99.9<span>%</span></div>
+          <div class="why-box-label">Verfügbarkeit</div>
+        </div>
+        <div class="why-box">
+          <div class="why-box-num">10<span>+</span></div>
+          <div class="why-box-label">Jahre Erfahrung</div>
+        </div>
+        <div class="why-box">
+          <div class="why-box-num">ISO</div>
+          <div class="why-box-label">27001 zertifiziert</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta reveal" id="kontakt">
+    <p class="section-tag">Kontakt</p>
+    <h2>Bereit anzufangen?</h2>
+    <p class="section-sub">Sprechen Sie uns an — wir schauen gemeinsam, wie Zentraq Ihnen helfen kann.</p>
+    <div class="cta-btns">
+      <a href="mailto:info@zentraq.de" class="btn btn-primary">E-Mail schreiben</a>
+      <a href="tel:+4930000000" class="btn btn-secondary">Anrufen</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Zen<span>traq</span></div>
+    <ul class="footer-links">
+      <li><a href="#">Impressum</a></li>
+      <li><a href="#">Datenschutz</a></li>
+      <li><a href="#">AGB</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Zentraq GmbH</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>
